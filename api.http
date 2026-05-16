@@ -1,0 +1,111 @@
+### Todo API — Coleção de Requisições
+### Use com a extensão REST Client (VS Code) ou importe no Insomnia
+
+@baseUrl = http://localhost:3000
+@token = COLE_SEU_TOKEN_AQUI
+
+### Health Check
+GET {{baseUrl}}/health
+
+### ─────────────────────────────
+### AUTH
+### ─────────────────────────────
+
+### Registrar usuário
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "password": "senha123"
+}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "joao@email.com",
+  "password": "senha123"
+}
+
+### Meus dados
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### ─────────────────────────────
+### PROJETOS
+### ─────────────────────────────
+
+### Listar projetos (público, com paginação)
+GET {{baseUrl}}/projects?page=1&limit=10
+
+### Buscar com filtro
+GET {{baseUrl}}/projects?search=api
+
+### Criar projeto
+POST {{baseUrl}}/projects
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Projeto Alpha",
+  "description": "Descrição do projeto"
+}
+
+### Buscar projeto por ID
+GET {{baseUrl}}/projects/PROJECT_ID_AQUI
+
+### Atualizar projeto
+PUT {{baseUrl}}/projects/PROJECT_ID_AQUI
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Título Atualizado"
+}
+
+### Deletar projeto (soft delete)
+DELETE {{baseUrl}}/projects/PROJECT_ID_AQUI
+Authorization: Bearer {{token}}
+
+### ─────────────────────────────
+### TAREFAS
+### ─────────────────────────────
+
+### Listar tarefas do projeto
+GET {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks
+
+### Criar tarefa
+POST {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Implementar autenticação",
+  "description": "JWT + bcrypt",
+  "priority": "HIGH",
+  "status": "IN_PROGRESS"
+}
+
+### Atualizar status da tarefa
+PATCH {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks/TASK_ID_AQUI
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "DONE"
+}
+
+### Deletar tarefa
+DELETE {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks/TASK_ID_AQUI
+Authorization: Bearer {{token}}
+
+### ─────────────────────────────
+### ADMIN
+### ─────────────────────────────
+
+### Listar todos os usuários (ADMIN only)
+GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
