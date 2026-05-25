@@ -109,3 +109,42 @@ describe('GET /auth/me', () => {
     expect(res.status).toBe(401)
   })
 })
+
+describe('PATCH /auth/me', () => {
+  it('deve atualizar o nome do usuário', async () => {
+    const reg = await request(app).post('/auth/register').send({
+      name: 'Nome Original',
+      email: 'patch@teste.com',
+      password: 'senha123',
+    })
+
+    const res = await request(app)
+      .patch('/auth/me')
+      .set('Authorization', `Bearer ${reg.body.token}`)
+      .send({ name: 'Nome Atualizado' })
+
+    expect(res.status).toBe(200)
+    expect(res.body.name).toBe('Nome Atualizado')
+    expect(res.body.password).toBeUndefined()
+  })
+
+  it('deve retornar 422 sem nenhum campo', async () => {
+    const reg = await request(app).post('/auth/register').send({
+      name: 'Teste Vazio',
+      email: 'patchvazio@teste.com',
+      password: 'senha123',
+    })
+
+    const res = await request(app)
+      .patch('/auth/me')
+      .set('Authorization', `Bearer ${reg.body.token}`)
+      .send({})
+
+    expect(res.status).toBe(422)
+  })
+
+  it('deve retornar 401 sem token', async () => {
+    const res = await request(app).patch('/auth/me').send({ name: 'Sem Token' })
+    expect(res.status).toBe(401)
+  })
+})

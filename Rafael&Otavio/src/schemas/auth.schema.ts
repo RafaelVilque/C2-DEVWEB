@@ -11,15 +11,5 @@ export const loginSchema = z.object({
   password: z.string().min(1, 'Senha obrigatória.'),
 })
 
-export const updateMeSchema = z
-  .object({
-    name: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres.').optional(),
-    password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres.').optional(),
-  })
-  .refine((data) => data.name !== undefined || data.password !== undefined, {
-    message: 'Informe ao menos um campo para atualizar (name ou password).',
-  })
-
 export type RegisterInput = z.infer<typeof registerSchema>
 export type LoginInput = z.infer<typeof loginSchema>
-export type UpdateMeInput = z.infer<typeof updateMeSchema>

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { prisma } from '../lib/prisma.js'
 import { hashPassword, verifyPassword, signToken } from '../lib/auth.js'
-import { registerSchema, loginSchema, updateMeSchema } from '../schemas/auth.schema.js'
+import { registerSchema, loginSchema } from '../schemas/auth.schema.js'
 import { authenticate } from '../middlewares/authenticate.js'
 
 export const authRouter = Router()
@@ -72,28 +72,6 @@ authRouter.get('/me', authenticate, async (req: Request, res: Response): Promise
     res.status(404).json({ error: 'Usuário não encontrado.' })
     return
   }
-
-  res.json(user)
-})
-
-// PATCH /auth/me — atualiza nome e/ou senha do usuário autenticado
-authRouter.patch('/me', authenticate, async (req: Request, res: Response): Promise<void> => {
-  const parsed = updateMeSchema.safeParse(req.body)
-  if (!parsed.success) {
-    res.status(422).json({ error: 'Dados inválidos.', details: parsed.error.flatten() })
-    return
-  }
-
-  const { name, password } = parsed.data
-  const data: Record<string, unknown> = {}
-  if (name) data.name = name
-  if (password) data.password = await hashPassword(password)
-
-  const user = await prisma.user.update({
-    where: { id: req.user!.sub },
-    data,
-    select: { id: true, name: true, email: true, role: true, updatedAt: true },
-  })
 
   res.json(user)
 })

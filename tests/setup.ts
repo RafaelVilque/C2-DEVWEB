@@ -8,7 +8,6 @@ process.env.NODE_ENV = 'test'
 
 const prisma = new PrismaClient()
 
-// Roda migrations no banco de teste antes de tudo
 beforeAll(async () => {
   execSync('npx prisma migrate deploy', {
     env: { ...process.env, DATABASE_URL: 'file:./prisma/test.db' },
@@ -16,7 +15,6 @@ beforeAll(async () => {
   await prisma.$connect()
 })
 
-// Limpa todas as tabelas entre cada teste
 afterEach(async () => {
   await prisma.task.deleteMany()
   await prisma.project.deleteMany()

@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # ── Banco de dados PostgreSQL ──────────────────────────────────────────────
+  # Sem mapeamento de porta: acessível apenas pelos contêineres internos
+  postgres:
+    image: postgres:16-alpine
+    container_name: c2-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: c2user
+      POSTGRES_PASSWORD: c2password
+      POSTGRES_DB: c2db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # dados persistentes
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U c2user -d c2db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Aplicação Web (Node.js + Express + Frontend) ───────────────────────────
+  # Disponível na porta 8080 da máquina local
+  app:
+    build: .
+    container_name: c2-app
+    restart: unless-stopped
+    ports:
+      - "8080:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://c2user:c2password@postgres:5432/c2db
+      JWT_SECRET: docker_jwt_secret_rafael_otavio_2024
+      JWT_EXPIRES_IN: 7d
+      PORT: 3000
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  # ── Adminer: administração gráfica do banco ────────────────────────────────
+  adminer:
+    image: adminer:latest
+    container_name: c2-adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  # ── Portainer: gerenciamento gráfico dos contêineres ──────────────────────
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: c2-portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+volumes:
+  postgres_data:      # dados do banco persistem mesmo ao desligar o contêiner
+  portainer_data:
+
+networks:
+  app-network:
+    driver: bridge
