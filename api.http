@@ -2,7 +2,7 @@
 ### Use com a extensão REST Client (VS Code) ou importe no Insomnia
 
 @baseUrl = http://localhost:3000
-@token = COLE_SEU_TOKEN_AQUI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXBuOGwxdGMwMDAwdjExbXFldHJuc2drIiwiZW1haWwiOiJWYXN0b05vdEJldEBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3OTgzNjYzMSwiZXhwIjoxNzgwNDQxNDMxfQ.OhePVYegE44SLsh37M4emCC9-IvBwfcnCH9_A9ME5H0
 
 ### Health Check
 GET {{baseUrl}}/health
@@ -21,13 +21,23 @@ Content-Type: application/json
   "password": "senha123"
 }
 
+### Registrar usuário 2 — Vasco
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Vasco da Gama",
+  "email": "VastoNotBet@gmail.com",
+  "password": "100Derrotas"
+}
+
 ### Login
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "joao@email.com",
-  "password": "senha123"
+  "email": "VastoNotBet@gmail.com",
+  "password": "100Derrotas"
 }
 
 ### Meus dados
@@ -50,15 +60,15 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Projeto Alpha",
-  "description": "Descrição do projeto"
+  "title": "Meu Projeto C2",
+  "description": "API desenvolvida por Otávio"
 }
 
 ### Buscar projeto por ID
-GET {{baseUrl}}/projects/PROJECT_ID_AQUI
+GET {{baseUrl}}/projects/cmpn7ikjw000214h2jwkrf309
 
 ### Atualizar projeto
-PUT {{baseUrl}}/projects/PROJECT_ID_AQUI
+PUT {{baseUrl}}/projects/cmpn7ikjw000214h2jwkrf309
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -67,7 +77,7 @@ Content-Type: application/json
 }
 
 ### Deletar projeto (soft delete)
-DELETE {{baseUrl}}/projects/PROJECT_ID_AQUI
+DELETE {{baseUrl}}/projects/cmpn7ikjw000214h2jwkrf309
 Authorization: Bearer {{token}}
 
 ### ─────────────────────────────
@@ -75,22 +85,23 @@ Authorization: Bearer {{token}}
 ### ─────────────────────────────
 
 ### Listar tarefas do projeto
-GET {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks
+GET {{baseUrl}}/projects/cmpn7ikjw000214h2jwkrf309/tasks
 
 ### Criar tarefa
-POST {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks
+POST {{baseUrl}}/projects/cmpn7ikjw000214h2jwkrf309/tasks
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Implementar autenticação",
-  "description": "JWT + bcrypt",
+  "title": "Finalizar apresentação",
+  "description": "Rezar para dar certo",
   "priority": "HIGH",
-  "status": "IN_PROGRESS"
+  "status": "PENDING",
+  "dueData": "2020-06-01T23:59:00Z"
 }
 
 ### Atualizar status da tarefa
-PATCH {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks/TASK_ID_AQUI
+PATCH {{baseUrl}}/projects/cmpn7ikjw000214h2jwkrf309/tasks/cmpn7kdmn000414h2fxo3ohx3
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -99,7 +110,7 @@ Content-Type: application/json
 }
 
 ### Deletar tarefa
-DELETE {{baseUrl}}/projects/PROJECT_ID_AQUI/tasks/TASK_ID_AQUI
+DELETE {{baseUrl}}/projects/cmpn7ikjw000214h2jwkrf309/tasks/cmpn7kdmn000414h2fxo3ohx3
 Authorization: Bearer {{token}}
 
 ### ─────────────────────────────
